@@ -10,3 +10,4 @@ add_library(CANFDLib STATIC  ${CMAKE_CURRENT_SOURCE_DIR}/src/CANFD.cpp)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(Set)
+include(Install)
