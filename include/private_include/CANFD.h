@@ -16,6 +16,9 @@
 
 #include "CAN.h"
 #include <map>
+#include <thread>
+#include <semaphore>
+#include <iostream>
 
 /**
  * @brief CANFD class for implementation of the CAN function
@@ -31,10 +34,13 @@ class CANFD final: public CAN  {
         CANFD& operator=(CANFD&& myCANFD) = default;
     
     private:
-        [[nodiscard]] bool CreateSocket(std::string mysocketname,std::string Interface_name,bool test_mode, bool IsCANFD) override;
-        void SendMessage(std::string mysocketname, int ID, int frame_length,  const char* the_real_data) override;
-        CANFDStruct ListenSocket(std::string mysocketname) override;
-        void CANFDCheck(bool CANFD);
+        [[nodiscard]] bool CreateSocket(const std::string mysocketname,const std::string Interface_name,const bool test_mode,const bool IsCANFD) override;
+        void SendMessage(const std::string mysocketname, const int ID, const int frame_length,  const char* the_real_data) override;
+        CANFDStruct ListenSocket(const std::string mysocketname) override;
+        void CANFDCheck(const bool CANFD);
+
+        CANFDStruct threadListening(const std::string mysocketname);
+        void threadSending(const std::string mysocketname, const int ID, const int frame_length,  const char* the_real_data);
 
         /**
          * @brief Set the Network Interface object
@@ -42,7 +48,7 @@ class CANFD final: public CAN  {
          * @param Interface_name The network interface name we created
          * @return * void 
          */
-        void setNetworkInterface(std::string Interface_name);
+        void setNetworkInterface(const std::string Interface_name);
 
         /**
          * @brief The test mode parameter. Initiliazed with a test false
@@ -61,6 +67,9 @@ class CANFD final: public CAN  {
          * 
          */
         static std::map<std::string, int> m_msocket_map;
+
+
+        std::binary_semaphore ghdj{1};
 };
 
 

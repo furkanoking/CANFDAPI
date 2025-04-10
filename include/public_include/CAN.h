@@ -39,7 +39,7 @@ class CAN {
          * @return true        If the socket is created successfully, return true
          * @return false 
          */
-        virtual bool CreateSocket(std::string mysocketname, std::string Interface_name, bool test_mode, bool IsCANFD) = 0;
+        virtual bool CreateSocket(const std::string mysocketname, const std::string Interface_name, const bool test_mode, const bool IsCANFD) = 0;
         
         /**
          * @brief This function is for sending a message to a specific 
@@ -49,14 +49,14 @@ class CAN {
          * @param frame_length The data length in bytes
          * @param the_real_data The real data
          */
-        virtual void SendMessage(std::string socketname, int ID, int frame_length, const char* the_real_data) = 0;
+        virtual void SendMessage(const std::string mysocketname, const int ID, const int frame_length,  const char* the_real_data) = 0;
         
         /**
          * @brief Listen a 
          * 
          * @param mysocketname 
          */
-        virtual CANFDStruct ListenSocket(std::string mysocketname) = 0;
+        virtual CANFDStruct ListenSocket(const std::string mysocketname) = 0;
  
 };
 

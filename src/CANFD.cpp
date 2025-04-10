@@ -48,7 +48,7 @@ CANFD::~CANFD(){
  * @return true 
  * @return false ıf the socket cannot be created, It will returns false
  */
-bool CANFD::CreateSocket(std::string mysocketname,std::string Interface_name,bool test_mode, bool IsCANFD){
+bool CANFD::CreateSocket(const std::string mysocketname,const std::string Interface_name,const bool test_mode,const bool IsCANFD){
     if(int sock = socket(PF_CAN,SOCK_RAW, CAN_RAW); sock < 0) {
         perror("Socket problem");
         std::cout<<"Socket cannot be created in the name of"<<mysocketname<<"\n";
@@ -89,7 +89,7 @@ void CANFD::CANFDCheck(bool CANFD){
 }
 
 
-void CANFD::setNetworkInterface(std::string Interface_name){
+void CANFD::setNetworkInterface(const std::string Interface_name){
     struct ifreq the_ifreq;
     std::strcpy(the_ifreq.ifr_name,Interface_name.c_str());
 
@@ -106,7 +106,7 @@ void CANFD::setNetworkInterface(std::string Interface_name){
 
 
 
-void CANFD::SendMessage(std::string mysocketname, int ID, int frame_length, const char* the_real_data) {
+void CANFD::threadSending(const std::string mysocketname, const int ID, const int frame_length,  const char* the_real_data) {
     struct canfd_frame new_frame;
     new_frame.can_id=ID;
     new_frame.len = frame_length;
@@ -129,7 +129,7 @@ void CANFD::SendMessage(std::string mysocketname, int ID, int frame_length, cons
 }
 
 
-CANFDStruct CANFD::ListenSocket(std::string mysocketname) {
+CANFDStruct CANFD::threadListening(std::string mysocketname) {
     int socket_value {-99};
     struct canfd_frame the_listening_frame;
     CANFDStruct my_CANFDStruct;
@@ -162,3 +162,12 @@ CANFDStruct CANFD::ListenSocket(std::string mysocketname) {
     }
 }
 
+
+void CANFD::SendMessage(const std::string mysocketname, const int ID, const int frame_length,  const char* the_real_data){
+    std::thread ThreadSending(&CANFD::threadSending,this,mysocketname,ID, frame_length,the_real_data);
+    ThreadSending.join(); // the reason we are doing this waiting the finish the execution of the thread
+}
+
+CANFDStruct CANFD::ListenSocket(const std::string mysocketname){
+    std::thread threadListening(&CANFD::threadListening,this, mysocketname);
+}
