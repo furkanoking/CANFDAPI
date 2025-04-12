@@ -1,0 +1,31 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "type": "cppbuild",
+        "label": "C/C++: g++ build active file",
+        "command": "/usr/bin/g++",
+        "args": [
+          "-fdiagnostics-color=always",
+          "-g",
+          "-std=c++20",
+          "-I${workspaceFolder}/include/public_include",
+          "-I${workspaceFolder}/include/private_include",
+          "${file}",
+          "-o",
+          "${fileDirname}/${fileBasenameNoExtension}"
+        ],
+        "options": {
+          "cwd": "${fileDirname}"
+        },
+        "problemMatcher": [
+          "$gcc"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "detail": "Manual build with g++"
+      }
+    ]
+  }
