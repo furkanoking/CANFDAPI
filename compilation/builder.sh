@@ -6,6 +6,8 @@ mkdir ../build
 cd ../build
 
 echo "Cmake is in progress"
+#cmake -DCMAKE_BUILD_TYPE=Debug .
+
 cmake ../
 
 echo "In compiling"
