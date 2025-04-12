@@ -26,14 +26,20 @@
  */
 class CANFD final: public CAN  {
     public:
-        CANFD();
+        explicit CANFD();
         ~CANFD();
+
+        // For debugging
+        void operator()() const;
+
+        // converesion operator
+        explicit operator bool() const;
 
         CANFD& operator=(const CANFD& myCANFD) = default;
         CANFD(const CANFD& myCANFD) = default;
         CANFD& operator=(CANFD&& myCANFD) = default;
     
-    private:
+    //private:
         [[nodiscard]] bool CreateSocket(const std::string mysocketname,const std::string Interface_name,const bool test_mode,const bool IsCANFD) override;
         void SendMessage(const std::string mysocketname, const int ID, const int frame_length,  const char* the_real_data) override;
         CANFDStruct ListenSocket(const std::string mysocketname) override;

@@ -23,10 +23,10 @@
  * 
  */
 
+std::map<std::string, int> CANFD::m_msocket_map;
+
 CANFD::CANFD(){
-    if(!m_msocket_map.empty()){
-        m_msocket_map.clear();
-    }
+
 }
 
 /**
@@ -35,9 +35,7 @@ CANFD::CANFD(){
  */
 
 CANFD::~CANFD(){
-    if(!m_msocket_map.empty()){
-        m_msocket_map.clear();
-    }
+
 }
 
 /**
@@ -170,4 +168,15 @@ void CANFD::SendMessage(const std::string mysocketname, const int ID, const int 
 
 CANFDStruct CANFD::ListenSocket(const std::string mysocketname){
     std::thread threadListening(&CANFD::threadListening,this, mysocketname);
+}
+
+void CANFD::operator()() const{
+    for(auto x: m_msocket_map)
+    {
+        std::cout<<"The socket map has "<<x.first<<" "<<x.second<<std::endl;
+    }
+}
+
+CANFD::operator bool() const {
+    return true;
 }

@@ -8,7 +8,7 @@ file(GLOB_RECURSE sources
                     ${CMAKE_SOURCE_DIR}/src/*.c)
 
 
-set(lib_sources sources)
+set(lib_sources ${sources})
 
 file(GLOB_RECURSE pu_headers 
                     ${CMAKE_SOURCE_DIR}/include/public_include/*.h
@@ -26,4 +26,4 @@ set_target_properties(CANFDLib PROPERTIES
     PUBLIC_HEADER   ${PUBLIC_headers}
     PRIVATE_HEADER  ${PRIVATE_headers})
 
-target_link_libraries(CANFDLib PRIVATE ${lib_sources})
+#target_sources(CANFDLib PRIVATE ${lib_sources})

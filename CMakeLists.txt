@@ -12,3 +12,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(Set)
 include(Install)
 include(Dependicies)
+
+# For google test
+add_subdirectory(test)
