@@ -49,14 +49,18 @@ class CAN {
          * @param frame_length The data length in bytes
          * @param the_real_data The real data
          */
+
         virtual void SendMessage(const std::string mysocketname, const int ID, const int frame_length,  const char* the_real_data) = 0;
+
+
+        virtual void SendMessage(const std::string mysocketname, const int ID, const int frame_length,  int the_real_data) = 0;
         
         /**
          * @brief Listen a 
          * 
          * @param mysocketname 
          */
-        virtual CANFDStruct ListenSocket(const std::string mysocketname) = 0;
+        virtual void ListenSocket(const std::string mysocketname) = 0;
  
 };
 
