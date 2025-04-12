@@ -19,6 +19,7 @@
 #include <thread>
 #include <semaphore>
 #include <iostream>
+#include <vector>
 
 /**
  * @brief CANFD class for implementation of the CAN function
@@ -82,6 +83,14 @@ class CANFD final: public CAN  {
 
 
         std::binary_semaphore binary_check{1};
+
+        virtual void setID(u_int32_t ReceiverID) override;
+
+        u_int32_t m_iID{-99};
+
+        std::vector<u_int64_t> ReceivedOriginalData;
+
+        //TODO bir fonksiyon yazılacak. Template kullanılacak !! constexpr kullanılacak !!! Gerçek datayı buraya set ediceksin!!!!! Datayı set ederken semaphore veya mutex kullan !!!
 };
 
 

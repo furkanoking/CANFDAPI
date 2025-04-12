@@ -26,7 +26,7 @@
 std::map<std::string, int> CANFD::m_msocket_map;
 
 CANFD::CANFD(){
-
+    ReceivedOriginalData.reserve(4);
 }
 
 /**
@@ -158,6 +158,10 @@ void CANFD::threadListening(std::string mysocketname) {
         int nbytes = read(socket_value,&the_listening_frame,sizeof(the_listening_frame));
         if(nbytes > 0){
             std::cout<<"There is a message came "<<std::endl;
+            if(the_listening_frame.can_id != m_iID){
+                std::cout<<"Receiving message is not suitable ID. It will be not read"<<std::endl;
+                continue;
+            }
             //char* received_Data = new char [the_listening_frame.len];
             my_CANFDStruct.CANID = the_listening_frame.can_id;
             my_CANFDStruct.length= the_listening_frame.len;
@@ -230,4 +234,10 @@ void CANFD::threadSendingintData(const std::string mysocketname, const int ID, c
     std::cout<<"Trying the sending message"<<std::endl;
     write(m_msocket_map.at(mysocketname),&new_frame,sizeof(new_frame));
     binary_check.release();
+}
+
+
+
+void CANFD::setID(u_int32_t ReceiverID) {
+    m_iID = ReceiverID;
 }

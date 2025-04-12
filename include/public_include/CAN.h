@@ -61,6 +61,13 @@ class CAN {
          * @param mysocketname 
          */
         virtual void ListenSocket(const std::string mysocketname) = 0;
+
+        /**
+         * @brief It sets the message ID. So that while listening the interface, it only accepts accoring to its ID
+         * 
+         * @param ReceiverID 
+         */
+        virtual void setID(u_int32_t ReceiverID) = 0; 
  
 };
 
