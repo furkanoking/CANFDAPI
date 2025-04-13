@@ -26,7 +26,6 @@
 std::map<std::string, int> CANFD::m_msocket_map;
 
 CANFD::CANFD(){
-    ReceivedOriginalData.reserve(4);
 }
 
 /**
@@ -138,7 +137,7 @@ void CANFD::threadSending(const std::string mysocketname, const int ID, const in
 }
 
 
-void CANFD::threadListening(std::string mysocketname) {
+void CANFD::threadListening(std::string mysocketname, std::function<void(CANFDStruct)> customerArrivedMessageFunc) {
 
 
     int socket_value {-99};
@@ -162,6 +161,7 @@ void CANFD::threadListening(std::string mysocketname) {
                 std::cout<<"Receiving message is not suitable ID. It will be not read"<<std::endl;
                 continue;
             }
+
             //char* received_Data = new char [the_listening_frame.len];
             my_CANFDStruct.CANID = the_listening_frame.can_id;
             my_CANFDStruct.length= the_listening_frame.len;
@@ -171,8 +171,18 @@ void CANFD::threadListening(std::string mysocketname) {
                 my_CANFDStruct.data[i] = the_listening_frame.data[i];
                 //received_Data[i] = static_cast<u_int8_t>(the_listening_frame.data[i]);
             }
+            setData(my_CANFDStruct);
 
+            // check the func is provided or not
+            if(customerArrivedMessageFunc){
+                customerArrivedMessageFunc(my_CANFDStruct);
+            }
+
+            else{
+                std::cout<<"The customer did not provide any function"<<std::endl;
+            }
         }
+
     }
 }
 
@@ -183,8 +193,8 @@ void CANFD::SendMessage(const std::string mysocketname, const int ID, const int 
     ThreadSending.detach();
 }
 
-void CANFD::ListenSocket(const std::string mysocketname){
-    std::thread threadListening(&CANFD::threadListening,this, mysocketname);
+void CANFD::ListenSocket(const std::string mysocketname, std::function<void(CANFDStruct)> customerArrivedMessageFunc){
+    std::thread threadListening(&CANFD::threadListening,this, mysocketname,customerArrivedMessageFunc );
     //threadListening.join();
     threadListening.detach();
 }
@@ -240,4 +250,14 @@ void CANFD::threadSendingintData(const std::string mysocketname, const int ID, c
 
 void CANFD::setID(u_int32_t ReceiverID) {
     m_iID = ReceiverID;
+}
+
+template < typename DataType >
+void CANFD::setData(DataType Data) {
+    if constexpr (std::is_same_v<DataType, CANFDStruct>) {
+        DataQueue.push(Data);
+    }
+    else {
+        std::cout<<"Not supporting type";
+    }
 }

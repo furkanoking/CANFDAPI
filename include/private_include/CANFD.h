@@ -20,7 +20,7 @@
 #include <semaphore>
 #include <iostream>
 #include <vector>
-
+#include <queue>
 /**
  * @brief CANFD class for implementation of the CAN function
  * 
@@ -43,7 +43,7 @@ class CANFD final: public CAN  {
     //private:
         [[nodiscard]] bool CreateSocket(const std::string mysocketname,const std::string Interface_name,const bool test_mode,const bool IsCANFD) override;
         void SendMessage(const std::string mysocketname, const int ID, const int frame_length,  const char* the_real_data) override;
-        void ListenSocket(const std::string mysocketname) override;
+        void ListenSocket(const std::string mysocketname, std::function<void(CANFDStruct)> customerArrivedMessageFunc) override;
         void CANFDCheck(const bool CANFD);
 
 
@@ -51,7 +51,7 @@ class CANFD final: public CAN  {
 
 
 
-        void threadListening(const std::string mysocketname);
+        void threadListening(const std::string mysocketname,std::function<void(CANFDStruct)> customerArrivedMessageFunc);
         void threadSending(const std::string mysocketname, const int ID, const int frame_length,  const char* the_real_data);
         void threadSendingintData(const std::string mysocketname, const int ID, const int frame_length,  int the_real_data);
 
@@ -86,9 +86,20 @@ class CANFD final: public CAN  {
 
         virtual void setID(u_int32_t ReceiverID) override;
 
-        u_int32_t m_iID{-99};
+        u_int32_t m_iID{99};
 
-        std::vector<u_int64_t> ReceivedOriginalData;
+
+        /**
+         * @brief Set the Data object and push to the queue
+         * 
+         * @tparam DataType 
+         * @param Data 
+         */
+        template < typename DataType >
+        void setData(DataType Data);
+
+
+        std::queue<CANFDStruct> DataQueue;
 
         //TODO bir fonksiyon yazılacak. Template kullanılacak !! constexpr kullanılacak !!! Gerçek datayı buraya set ediceksin!!!!! Datayı set ederken semaphore veya mutex kullan !!!
 };

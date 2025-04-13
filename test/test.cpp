@@ -10,6 +10,11 @@ TEST(Toplama_Testi, Pozifdifgsg){
 }
 
 
+void ListeningTry(CANFDStruct myCAN) {
+    std::cout<<"Function cagrildiii"<<std::endl;
+    std::cout<<"ID:"<<myCAN.CANID<<std::endl;
+}
+
 int main(){
     // The network name should be generated from the terminal.
     // Than the socketname and the 
@@ -36,8 +41,8 @@ int main(){
 
     //my_CANFD.ListenSocket("FurkanSocket");
     int data = 0xDEAD;
-
-    my_CANFD.ListenSocket("FurkanSocket");
+    my_CANFD.setID(0x12);
+    my_CANFD.ListenSocket("FurkanSocket",ListeningTry);
     my_CANFD.SendMessage("FurkanSocket",0x12,4,data);
 
     std::cout<<"Bu da benim Debug laaan"<<std::endl;
