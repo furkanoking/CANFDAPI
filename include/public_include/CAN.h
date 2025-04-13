@@ -14,6 +14,7 @@
 
  #define MAX_CANFD_LENGTH 64
 #include <iostream>
+#include <functional>
 
 
 struct CANFDStruct {
@@ -60,7 +61,14 @@ class CAN {
          * 
          * @param mysocketname 
          */
-        virtual void ListenSocket(const std::string mysocketname) = 0;
+        virtual void ListenSocket(const std::string mysocketname, std::function<void(CANFDStruct)> customerArrivedMessageFunc) = 0;
+
+        /**
+         * @brief It sets the message ID. So that while listening the interface, it only accepts accoring to its ID
+         * 
+         * @param ReceiverID 
+         */
+        virtual void setID(u_int32_t ReceiverID) = 0; 
  
 };
 
